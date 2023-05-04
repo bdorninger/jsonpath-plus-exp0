@@ -43,6 +43,14 @@ export const foodata = `{
     ]
   }`;
 
+export const fdata = {
+  obj: [
+    { foo: 'abc', bar: 5 },
+    { foo: 'xyz;', bar: 6 },
+    { foo: 'efg', bar: 9 },
+  ],
+};
+
 export const viewdata = {
   viewModelId: 'AirValve',
   content: [
@@ -136,6 +144,22 @@ export const viewdata = {
           displayName: true,
         },
       ],
+    },
+  ],
+};
+
+export const viewsnip = {
+  viewId: 'evs-panel',
+  name: 'Air valve - blowing',
+  content: [
+    {
+      viewId: 'evs-input-number',
+      evsModel: 'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActiveTime',
+    },
+    {
+      viewId: 'evs-actual-number',
+      evsModel:
+        'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActualActiveTime',
     },
   ],
 };

@@ -2,7 +2,60 @@ import './style.css';
 
 import { of, map } from 'rxjs';
 import { JSONPath } from 'jsonpath-plus';
-import { sample, viewdata } from './data';
+import { fdata, foodata, sample, viewdata } from './data';
+
+/**
+ * JSONPath plus cannot handle semicolons in queries????
+ */
+function escape(uri: string): string {
+  const r = uri.replace(';', '\\u003b');
+  // console.log('esc', r);
+  return r;
+}
+
+/**
+ *
+ * TODO:
+ *
+ * add a snippet into a model by specifying
+ *
+ * - after/before a view part with a given evsModel (in any content[]):
+ * - after/before a view part with any given property
+ *
+ * - on a numeric position in an object's content[]. Object identified by a property and its value
+ *
+ */
+type VT = number | string | boolean;
+type MPos = 'before' | 'after' | 'content';
+
+interface MergeOptions<T extends VT = string> {
+  property?: string;
+  value: T;
+  pos: MPos;
+  index?: number;
+}
+
+// - after/before a view part with a given evsModel (in any content[]):
+const mo0: MergeOptions = {
+  value: 'nsu=http://foo.bar;s=mySperDuperEvsModelValue',
+  property: 'evsModel',
+  pos: 'after',
+};
+
+// - on a numeric position in an object's content[]. Object identified by a property and its value
+const mo1: MergeOptions = {
+  value: 'nsu=http://foo.bar;s=mySperDuperEvsModelValue',
+  property: 'evsModel',
+  pos: 'content',
+  index: 4,
+};
+
+// - after/before a view part with any given property
+const mo2: MergeOptions<number> = {
+  value: 8,
+  property: 'index',
+  pos: 'after',
+};
 
 // import * as jp from 'jsonpath';
 
@@ -26,14 +79,15 @@ let exist = [];
   })
 );*/
 let uri = 'ab;';
-uri = 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_bActivatedInSequence';
+// uri = 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_bActivatedInSequence';
+uri = 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_rActiveTime';
 
-result.push(
+/* result.push(
   ...JSONPath({
     path: `$..*[?(@.evsModel==="${escape(uri)}")]`,
     json: viewdata,
   })
-);
+);*/
 
 // result.push(
 //  ...JSONPath({
@@ -42,19 +96,30 @@ result.push(
 //  })
 // );
 
-const vid = 'evs-input-number';
+/* 
 
-/* result.push(
+const vid = 'evs-input-number';
+result.push(
   ...JSONPath({
     path: `$..*[?(@.viewId==="${vid}")]`,
     json: viewdata,
   })
 );*/
 
-console.log('Found', result, exist);
+/* result = JSONPath({
+  path: `$..*[?(@.foo==="xyz\\u003b")]`,
+  json: JSON.parse(foodata),
+});
 
-function escape(uri: string): string {
-  const r = uri.replace(';', '\\u003b');
-  console.log('esc', r);
-  return r;
-}
+console.assert(
+  result.length > 0,
+  'Nothing found with escaped version of semicolon'
+);
+*/
+
+result = JSONPath({
+  path: `$.obj[?(@.foo==="abc" | @property===2)]^`,
+  json: fdata,
+});
+
+console.log('Found', result); //, exist);
