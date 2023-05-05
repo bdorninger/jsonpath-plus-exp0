@@ -1,24 +1,26 @@
 import { JSONPath } from 'jsonpath-plus';
 
-/**
- *
- * TODO:
- *
- * add a snippet into a model by specifying
- *
- *
- */
+interface FilterOptions<T extends VT = string> {
+  property?: string;
+  value: T;
+}
+
 type VT = number | string | boolean;
 type MPos = 'before' | 'after' | 'content';
 type MT = string | number | boolean | object | any[];
-interface MergeOptions<T extends VT = string> {
-  property?: string;
-  value: T;
+
+export interface MergeOptions<T extends VT = string> extends FilterOptions<T> {
   pos: MPos;
   index?: number;
   contributor?: string;
 }
 
+export interface RemoveOptions<T extends VT = string>
+  extends FilterOptions<T> {}
+
+/**
+ *
+ */
 export function merge<M extends MT, O extends VT = string>(
   modelSrc: M,
   snippet: object,
@@ -39,7 +41,9 @@ export function merge<M extends MT, O extends VT = string>(
   if (results.length > 0) {
     const destArray = results[0];
     if (Array.isArray(destArray)) {
-      const destIndex = destArray.findIndex((val) => val[prop] === value);
+      const destIndex = destArray.findIndex(
+        (elem) => elem[prop] === options.value
+      );
       insertSnip(
         destArray,
         snippet,
@@ -51,6 +55,41 @@ export function merge<M extends MT, O extends VT = string>(
   }
 
   return modelSrc;
+}
+
+/**
+ *
+ */
+export function remove<M extends MT, O extends VT = string>(
+  modelSrc: M,
+  options: RemoveOptions<O>
+): any[] {
+  const prop = options.property ?? 'evsModel';
+  const value =
+    typeof options.value === 'string' ? escape(options.value) : options.value;
+
+  const results: any[] = JSONPath({
+    json: modelSrc,
+    path: `$..*[?(@.${prop}==="${value}")]^`,
+    wrap: true,
+    /* callback: (pl, pt, fpl) =>
+      console.log(`remove callback payloads`, pl, pt, fpl),*/
+  });
+
+  const removed: any[] = [];
+
+  results.forEach((res) => {
+    // console.log('arrays: ', res);
+    if (Array.isArray(res)) {
+      const rmInd = res.findIndex((elem) => elem[prop] === options.value);
+      // console.log(`found ${prop} = ${options.value} at Index${rmInd}`);
+      if (rmInd >= 0) {
+        removed.push(...res.splice(rmInd, 1));
+      }
+    }
+  });
+
+  return removed;
 }
 
 function insertSnip(
@@ -69,12 +108,20 @@ function insertSnip(
   }
   snip.contributor = contrib;
 
-  // const values = Array.isArray(snip) ? ...snip : snip;
+  // console.log(`Inserting at ${index} --> ${pos} ${destIndex}`);
+
   if (Array.isArray(snip)) {
     arr.splice(index, 0, ...snip);
   } else {
     arr.splice(index, 0, snip);
   }
+}
+
+/**
+ * JSONPath plus cannot handle semicolons in queries????
+ */
+export function escape(str: string): string {
+  return str.replaceAll(';', '\\u003b');
 }
 
 /**
@@ -108,12 +155,3 @@ const mo2: MergeOptions<number> = {
   property: 'index',
   pos: 'after',
 };
-
-/**
- * JSONPath plus cannot handle semicolons in queries????
- */
-export function escape(uri: string): string {
-  const r = uri.replaceAll(';', '\\u003b');
-  // console.log('esc', r);
-  return r;
-}

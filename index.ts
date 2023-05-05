@@ -2,8 +2,10 @@ import './style.css';
 
 import { of, map } from 'rxjs';
 import { JSONPath } from 'jsonpath-plus';
-import { fdata, foodata, sample, viewdata, viewsnip } from './data';
-import { merge } from './merge';
+import { fdata, foodata, initData, sample, viewdata, viewsnip } from './data';
+import { merge, remove } from './merge';
+
+initData();
 
 // import * as jp from 'jsonpath';
 
@@ -12,8 +14,8 @@ import { merge } from './merge';
   .subscribe(console.log);
 */
 // Open the console in the bottom right to see results.
-let result = [];
-let exist = [];
+// let result = [];
+// let exist = [];
 
 // result.push(...JSONPath({ path: '$.store.book[*]', json: sample }));
 // result.push(...JSONPath({ path: '$..*[?(@.author==="Herman Melville")].^', json: sample }));
@@ -26,9 +28,9 @@ let exist = [];
     json: viewdata,
   })
 );*/
-let uri = 'ab;';
+// let uri = 'ab;';
 // uri = 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_bActivatedInSequence';
-uri = 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_rActiveTime';
+// uri = 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_rActiveTime';
 
 /* result.push(
   ...JSONPath({
@@ -85,3 +87,18 @@ const merged = merge(model, snip, {
 });
 
 console.log('Mergerd model', merged);
+
+// remove all marker views.....
+/*
+const allRemoved = remove<object, string>(merged, {
+  property: 'viewId',
+  value: 'evs-marker',
+});
+*/
+// remove all view contributed by _IMM_
+const allRemoved = remove<object, string>(merged, {
+  property: 'contributor',
+  value: '_IMM_',
+});
+
+console.log('after remove', merged, allRemoved);
