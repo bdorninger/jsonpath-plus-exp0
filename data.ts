@@ -79,8 +79,7 @@ export const viewdata = {
         },
         {
           viewId: 'evs-marker',
-          // evsModel: 'nsu=http://engelglobal.com/IMM/AirValve1/;s=do_AirValve',
-          evsModel: 'ab;',
+          evsModel: 'nsu=http://engelglobal.com/IMM/AirValve1/;s=do_AirValve',          
           displayName: true,
         },
       ],

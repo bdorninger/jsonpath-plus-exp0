@@ -2,60 +2,8 @@ import './style.css';
 
 import { of, map } from 'rxjs';
 import { JSONPath } from 'jsonpath-plus';
-import { fdata, foodata, sample, viewdata } from './data';
-
-/**
- * JSONPath plus cannot handle semicolons in queries????
- */
-function escape(uri: string): string {
-  const r = uri.replace(';', '\\u003b');
-  // console.log('esc', r);
-  return r;
-}
-
-/**
- *
- * TODO:
- *
- * add a snippet into a model by specifying
- *
- * - after/before a view part with a given evsModel (in any content[]):
- * - after/before a view part with any given property
- *
- * - on a numeric position in an object's content[]. Object identified by a property and its value
- *
- */
-type VT = number | string | boolean;
-type MPos = 'before' | 'after' | 'content';
-
-interface MergeOptions<T extends VT = string> {
-  property?: string;
-  value: T;
-  pos: MPos;
-  index?: number;
-}
-
-// - after/before a view part with a given evsModel (in any content[]):
-const mo0: MergeOptions = {
-  value: 'nsu=http://foo.bar;s=mySperDuperEvsModelValue',
-  property: 'evsModel',
-  pos: 'after',
-};
-
-// - on a numeric position in an object's content[]. Object identified by a property and its value
-const mo1: MergeOptions = {
-  value: 'nsu=http://foo.bar;s=mySperDuperEvsModelValue',
-  property: 'evsModel',
-  pos: 'content',
-  index: 4,
-};
-
-// - after/before a view part with any given property
-const mo2: MergeOptions<number> = {
-  value: 8,
-  property: 'index',
-  pos: 'after',
-};
+import { fdata, foodata, sample, viewdata, viewsnip } from './data';
+import { merge } from './merge';
 
 // import * as jp from 'jsonpath';
 
@@ -117,9 +65,23 @@ console.assert(
 );
 */
 
+/*
 result = JSONPath({
-  path: `$.obj[?(@.foo==="abc" | @property===2)]^`,
+  path: `$.obj[?(@.foo==="abc")]^`,
   json: fdata,
 });
 
 console.log('Found', result); //, exist);
+*/
+
+const model = viewdata;
+const snip = viewsnip;
+
+const merged = merge(model, snip, {
+  pos: 'after',
+  property: 'evsModel',
+  value: 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_rActiveTime',
+  contributor: '_IMM_',
+});
+
+console.log('Mergerd model', merged);
