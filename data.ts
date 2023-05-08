@@ -63,6 +63,7 @@ export function initData() {
     content: [
       {
         viewId: 'evs-panel',
+        insertId: 'myID',
         header: [
           {
             viewId: 'evs-switch',
@@ -123,6 +124,7 @@ export function initData() {
       },
       {
         viewId: 'evs-panel',
+        insertId: 'myId2',
         header: [
           {
             viewId: 'evs-switch',
@@ -134,6 +136,8 @@ export function initData() {
         content: [
           {
             viewId: 'evs-input-number',
+            position: 10,
+            insertId: 'myInnerId',
             evsModel:
               'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_rActiveTime',
             content: [
@@ -146,6 +150,7 @@ export function initData() {
           },
           {
             viewId: 'evs-marker',
+            position: 20,
             evsModel: 'nsu=http://engelglobal.com/IMM/AirValve3/;s=do_AirValve',
             displayName: true,
           },
@@ -153,17 +158,22 @@ export function initData() {
       },
     ],
   };
+ 
 
   viewsnip = {
     viewId: 'evs-panel',
     name: 'Air valve - blowing',
+    insertId: 'myId2',
+    position: '22',
     content: [
       {
         viewId: 'evs-input-number',
+        position: 15,
         evsModel: 'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActiveTime',
       },
       {
         viewId: 'evs-actual-number',
+        position: 35,
         evsModel:
           'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActualActiveTime',
       },

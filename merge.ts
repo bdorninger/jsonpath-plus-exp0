@@ -99,7 +99,11 @@ function insertSnip(
   pos: MPos,
   contrib?: string
 ) {
-  let index = pos === 'before' ? destIndex - 1 : destIndex + 1;
+  let index = destIndex;
+  if (pos !== 'content') {
+    index = pos === 'before' ? destIndex - 1 : destIndex + 1;
+  }
+
   if (index < 0) {
     index = 0;
   }
@@ -141,6 +145,13 @@ const mo0: MergeOptions = {
   pos: 'after',
 };
 
+// - after/before a view part with any given property
+const mo2: MergeOptions<number> = {
+  value: 8,
+  property: 'index',
+  pos: 'after',
+};
+
 // - on a numeric position in an object's content[]. Object identified by a property and its value
 const mo1: MergeOptions = {
   value: 'nsu=http://foo.bar;s=mySperDuperEvsModelValue',
@@ -149,9 +160,9 @@ const mo1: MergeOptions = {
   index: 4,
 };
 
-// - after/before a view part with any given property
-const mo2: MergeOptions<number> = {
-  value: 8,
-  property: 'index',
-  pos: 'after',
+const mo3: MergeOptions = {
+  value: 'myId',
+  property: 'insertId',
+  pos: 'content',
+  index: 2,
 };
