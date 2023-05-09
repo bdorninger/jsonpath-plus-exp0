@@ -63,7 +63,7 @@ export function initData() {
     content: [
       {
         viewId: 'evs-panel',
-        insertId: 'myID',
+        insertId: 'myId',
         header: [
           {
             viewId: 'evs-switch',
@@ -75,6 +75,7 @@ export function initData() {
         content: [
           {
             viewId: 'evs-input-number',
+            position: 10,
             evsModel:
               'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActiveTime',
             content: [
@@ -87,6 +88,7 @@ export function initData() {
           },
           {
             viewId: 'evs-marker',
+            position: 20,
             evsModel: 'nsu=http://engelglobal.com/IMM/AirValve1/;s=do_AirValve',
             displayName: true,
           },
@@ -128,6 +130,7 @@ export function initData() {
         header: [
           {
             viewId: 'evs-switch',
+            position: 15,
             name: 'Air valve 3',
             evsModel:
               'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_bActivatedInSequence',

@@ -79,14 +79,51 @@ console.log('Found', result); //, exist);
 const model = viewdata;
 const snip = viewsnip;
 
-const merged = merge(model, snip, {
+let merged = merge(model, snip, {
   pos: 'after',
   property: 'evsModel',
   value: 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_rActiveTime',
   contributor: '_IMM_',
 });
 
-console.log('Mergerd model', merged);
+/*merged = merge(
+  merged,
+  { evsModel: 'mySuperDuperModel000', viewId: 'input' },
+  {
+    property: 'insertId',
+    value: 'myId',
+    pos: 'content',
+    index: 1,
+    contributor: 'KARL',
+  }
+);
+
+merged = merge(
+  merged,
+  { evsModel: 'mySuperDuperModel123', viewId: 'input', position: 14 },
+  {
+    property: 'insertId',
+    value: 'myId',
+    pos: 'content',
+    index: 'position',
+    contributor: 'SEPP',
+  }
+);*/
+
+merged = merge(
+  merged,
+  { evsModel: 'mySuperDuperModel999', viewId: 'input', position: 35 },
+  {
+    property: 'insertId',
+    value: 'myId2',
+    pos: 'header',
+    index: 'position',
+    contributor: 'HUGO',
+  }
+);
+
+const mergedClone = structuredClone(merged);
+console.log('Mergerd model', mergedClone);
 
 // remove all marker views.....
 /*

@@ -2,16 +2,17 @@ import { JSONPath } from 'jsonpath-plus';
 
 interface FilterOptions<T extends VT = string> {
   property?: string;
-  value: T;
+  value?: T;
+  useValueFromJson?: boolean;
 }
 
 type VT = number | string | boolean;
-type MPos = 'before' | 'after' | 'content';
+type MPos = 'before' | 'after' | 'content' | 'header';
 type MT = string | number | boolean | object | any[];
 
 export interface MergeOptions<T extends VT = string> extends FilterOptions<T> {
   pos: MPos;
-  index?: number;
+  index?: number | string;
   contributor?: string;
 }
 
@@ -30,27 +31,70 @@ export function merge<M extends MT, O extends VT = string>(
   const value =
     typeof options.value === 'string' ? escape(options.value) : options.value;
 
+  const path = `$..*[?(@.${prop}==="${value}")]${
+    options.pos === 'content' || options.pos === 'header' ? '' : '^'
+  }`;
+
   const results: any[] = JSONPath({
     json: modelSrc,
-    path: `$..*[?(@.${prop}==="${value}")]^`,
+    path: path,
     wrap: true,
     callback: (pl, pt, fpl) =>
       console.log(`jsonpath callback payloads`, pl, pt, fpl),
   });
 
   if (results.length > 0) {
-    const destArray = results[0];
-    if (Array.isArray(destArray)) {
-      const destIndex = destArray.findIndex(
+    const destObject = results[0];
+    if (
+      Array.isArray(destObject) &&
+      (options.pos === 'before' || options.pos === 'after')
+    ) {
+      const destIndex = destObject.findIndex(
         (elem) => elem[prop] === options.value
       );
       insertSnip(
-        destArray,
+        destObject,
         snippet,
         destIndex,
         options.pos,
         options.contributor
       );
+    } else if (
+      typeof destObject === 'object' &&
+      (options.pos === 'content' || options.pos === 'header')
+    ) {
+      const targetArrayProperty = options.pos;
+      if (destObject[targetArrayProperty] == null) {
+        destObject[targetArrayProperty] = [];
+      } else if (!Array.isArray(destObject[targetArrayProperty])) {
+        throw new Error(
+          `cannot merge into content[]. Property content is present and NOT an array!`
+        );
+      }
+
+      if (typeof options.index === 'number') {
+        insertSnip(
+          destObject[targetArrayProperty],
+          snippet,
+          options.index,
+          options.pos,
+          options.contributor
+        );
+      } else if (typeof options.index === 'string') {
+        const sortProp = options.index;
+        insertSnip(
+          destObject[targetArrayProperty],
+          snippet,
+          0,
+          options.pos,
+          options.contributor
+        );
+        // index contains the name of the property the content array is sorted
+        // maybe we do not need to sort at all?
+        (destObject[targetArrayProperty] as any[]).sort(
+          (a, b) => (a[sortProp] ?? 0) - (b[sortProp] ?? 0)
+        );
+      }
     }
   }
 
@@ -64,6 +108,12 @@ export function remove<M extends MT, O extends VT = string>(
   modelSrc: M,
   options: RemoveOptions<O>
 ): any[] {
+  if (options.value == null) {
+    throw new Error(
+      `a value to filter for removal candidates must be provided in the Remove Options!`
+    );
+  }
+
   const prop = options.property ?? 'evsModel';
   const value =
     typeof options.value === 'string' ? escape(options.value) : options.value;
@@ -92,6 +142,17 @@ export function remove<M extends MT, O extends VT = string>(
   return removed;
 }
 
+function adjustIndexToArrayBounds(arr: any[], rInd: number): number {
+  let ind = rInd;
+  if (ind < 0) {
+    ind = 0;
+  }
+  if (ind > arr.length) {
+    ind = arr.length;
+  }
+  return ind;
+}
+
 function insertSnip(
   arr: any[],
   snip: any,
@@ -99,17 +160,23 @@ function insertSnip(
   pos: MPos,
   contrib?: string
 ) {
+  console.log(
+    `Inserting@ ${destIndex} using ${pos} from ${contrib}`,
+    snip,
+    arr
+  );
+
   let index = destIndex;
-  if (pos !== 'content') {
-    index = pos === 'before' ? destIndex - 1 : destIndex + 1;
+  if (pos === 'before') {
+    index = destIndex - 1;
   }
 
-  if (index < 0) {
-    index = 0;
+  if (pos === 'after') {
+    index = destIndex + 1;
   }
-  if (index > arr.length) {
-    index = arr.length;
-  }
+
+  index = adjustIndexToArrayBounds(arr, index);
+
   snip.contributor = contrib;
 
   // console.log(`Inserting at ${index} --> ${pos} ${destIndex}`);
@@ -152,17 +219,29 @@ const mo2: MergeOptions<number> = {
   pos: 'after',
 };
 
+const mo3: MergeOptions = {
+  value: 'myId',
+  property: 'insertId',
+  pos: 'content',
+  index: 2,
+};
+
+// merge a snippet into a content array of an object identified by some property
+// a) the position within the content array being determined by a fixed index
+// b) the position within the content array being determined by a sortable attribute position
 // - on a numeric position in an object's content[]. Object identified by a property and its value
-const mo1: MergeOptions = {
+/* a)  on a numeric position in an object's content[]. Object identified by a property and its value*/
+const moInd: MergeOptions = {
   value: 'nsu=http://foo.bar;s=mySperDuperEvsModelValue',
   property: 'evsModel',
   pos: 'content',
   index: 4,
 };
 
-const mo3: MergeOptions = {
-  value: 'myId',
-  property: 'insertId',
+// b)
+const moPos: MergeOptions = {
+  useValueFromJson: true,
+  property: 'insertPoint',
   pos: 'content',
-  index: 2,
+  index: 'position',
 };
