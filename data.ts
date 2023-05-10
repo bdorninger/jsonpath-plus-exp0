@@ -3,6 +3,7 @@ export let foodata = {};
 export let fdata = {};
 export let viewdata = {};
 export let viewsnip = {};
+export let viewsnip3 = {};
 
 export function initData() {
   sample = {
@@ -59,6 +60,10 @@ export function initData() {
   };
 
   viewdata = {
+    meta: {
+      modelId: 'AirValve',
+      modelType: 'main', // 'snip'
+    },
     viewModelId: 'AirValve',
     content: [
       {
@@ -161,7 +166,6 @@ export function initData() {
       },
     ],
   };
- 
 
   viewsnip = {
     viewId: 'evs-panel',
@@ -177,6 +181,28 @@ export function initData() {
       {
         viewId: 'evs-actual-number',
         position: 35,
+        evsModel:
+          'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActualActiveTime',
+      },
+    ],
+  };
+
+  viewsnip3 = {
+    viewId: 'evs-panel',
+    name: 'something snippet',
+    // insertId: 'top',
+    position: '22',
+    content: [
+      {
+        viewId: 'evs-input-number',
+        insertId: 'myId31',
+        position: 90,
+        evsModel: 'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActiveTime',
+      },
+      {
+        viewId: 'evs-actual-number',
+        insertId: 'myId32',
+        position: 25,
         evsModel:
           'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActualActiveTime',
       },

@@ -14,10 +14,22 @@ export interface MergeOptions<T extends VT = string> extends FilterOptions<T> {
   pos: MPos;
   index?: number | string;
   contributor?: string;
+  sort?: boolean;
 }
 
 export interface RemoveOptions<T extends VT = string>
   extends FilterOptions<T> {}
+
+export function extractSnippets<T extends MT>(
+  modelOrSnippet: T
+): { insertId: 'string'; position?: number }[] {
+  const path = `$..*[?(@.insertId!=null)]`;
+  const results = JSONPath({
+    json: modelOrSnippet,
+    path: path,
+  });
+  return results as any;
+}
 
 /**
  *
@@ -39,8 +51,8 @@ export function merge<M extends MT, O extends VT = string>(
     json: modelSrc,
     path: path,
     wrap: true,
-    callback: (pl, pt, fpl) =>
-      console.log(`jsonpath callback payloads`, pl, pt, fpl),
+    /* callback: (pl, pt, fpl) =>
+      console.log(`jsonpath callback payloads`, pl, pt, fpl),*/
   });
 
   if (results.length > 0) {
@@ -90,10 +102,13 @@ export function merge<M extends MT, O extends VT = string>(
           options.contributor
         );
         // index contains the name of the property the content array is sorted
-        // maybe we do not need to sort at all?
-        (destObject[targetArrayProperty] as any[]).sort(
-          (a, b) => (a[sortProp] ?? 0) - (b[sortProp] ?? 0)
-        );
+        // do we need to sort it when performing the merge? I think we can we leave the interpretation of the content arrays it to the rendering process
+        // To have sorted content after assembly merge or even runtime merge is not required
+        if (options.sort) {
+          (destObject[targetArrayProperty] as any[]).sort(
+            (a, b) => (a[sortProp] ?? 0) - (b[sortProp] ?? 0)
+          );
+        }
       }
     }
   }

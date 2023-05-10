@@ -2,8 +2,16 @@ import './style.css';
 
 import { of, map } from 'rxjs';
 import { JSONPath } from 'jsonpath-plus';
-import { fdata, foodata, initData, sample, viewdata, viewsnip } from './data';
-import { merge, remove } from './merge';
+import {
+  fdata,
+  foodata,
+  initData,
+  sample,
+  viewdata,
+  viewsnip,
+  viewsnip3,
+} from './data';
+import { extractSnippets, merge, remove } from './merge';
 
 initData();
 
@@ -116,9 +124,21 @@ merged = merge(
   {
     property: 'insertId',
     value: 'myId2',
-    pos: 'header',
+    pos: 'content',
     index: 'position',
     contributor: 'HUGO',
+  }
+);
+
+merged = merge(
+  merged,
+  { evsModel: 'myOtherSuperDuperModel999', viewId: 'marker', position: 6 },
+  {
+    property: 'insertId',
+    value: 'myId2',
+    pos: 'header',
+    index: 'position',
+    contributor: 'TONI',
   }
 );
 
@@ -140,3 +160,6 @@ const allRemoved = remove<object, string>(merged, {
 });
 
 console.log('after remove', merged, allRemoved);
+
+const results = extractSnippets(viewsnip3);
+console.log(`extracted snips`, results);
