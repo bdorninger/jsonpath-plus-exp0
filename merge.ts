@@ -117,7 +117,7 @@ export function merge<M extends MT, O extends VT = string>(
 }
 
 /**
- *
+ * removes entries from arrays which fulfill a provided filter expression
  */
 export function remove<M extends MT, O extends VT = string>(
   modelSrc: M,

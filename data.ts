@@ -64,7 +64,6 @@ export function initData() {
       modelId: 'AirValve',
       modelType: 'main', // 'snip'
     },
-    viewModelId: 'AirValve',
     content: [
       {
         viewId: 'evs-panel',
