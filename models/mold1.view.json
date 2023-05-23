@@ -1,0 +1,155 @@
+{
+  "viewModelId": "Mold1",
+  "insertId:": "top"
+  "content": [
+    {
+      "position": 5,
+      "viewId": "evs-panel",
+      "name": "Opening profile | closing profile",
+      "columnCnt": 2,
+      "content": [
+        {
+          "viewId": "evs-actual-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_MeasActPos.rActDer"
+        },
+        {
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_MeasActClForce.rAct",
+          "viewId": "evs-actual-number"
+        },
+        {
+          "viewId": "evs-chart-wrapper",
+          "base": "nsu=http://engelglobal.com/Graph/;s=GraphModel.Mold1.sv_VisProfileGraphicOpAuto"
+        },
+        {
+          "viewId": "evs-chart-wrapper",
+          "base": "nsu=http://engelglobal.com/Graph/;s=GraphModel.Mold1.sv_VisProfileGraphicClAuto",
+          "externalCurves": [
+            {
+              "maxPoints": -1,
+              "seriesAddress": "nsu=http://engelglobal.com/Graph/;s=GraphModel.Mold1.sv_VisProfileGraphicClAuto.AutoProtect.VarMold1AP.adAutoprotect_abAutoProtectBlock_m_AutoProtect.Series.ActualValueSeries.curve",
+              "samplingRate": 100,
+              "isActValue": true,
+              "yAxisID": "nsu=http://engelglobal.com/Graph/;s=GraphModel.Mold1.sv_VisProfileGraphicClAuto.YAxes.Mold1.sv_VisProfileGraphicClAuto.pVelocity^.pOutRefsPumps^.yAxis",
+              "xAxisID": "nsu=http://engelglobal.com/Graph/;s=GraphModel.Mold1.sv_VisProfileGraphicClAuto.XAxes.Mold1.sv_VisProfileGraphicClAuto.pVelocity^.pOutRefsPumps^.xAxis"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "position": 10,
+      "viewId": "evs-panel",
+      "name": "Mold stroke position",
+      "header": [
+        {
+          "viewId": "evs-actual-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_MeasActPos.rAct"
+        }
+      ],
+      "content": [
+        {
+          "viewId": "evs-line",
+          "content": [
+            {
+              "viewId": "evs-input-number",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_rMldOpenPos",
+              "content": [
+                {
+                  "viewId": "evs-marker",
+                  "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bMldOpen"
+                }
+              ]
+                },
+            {
+              "viewId": "evs-input-number",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_rMldClosedPos",
+              "content": [
+                {
+                  "viewId": "evs-marker",
+                  "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bMldClosed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "viewId": "evs-dropdown",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_MoldEntirelyOpening"
+        }
+      ]
+    },
+    {
+      "position": 15,
+      "viewId": "evs-panel",
+      "name": "Clamp force",
+      "header": [
+        {
+          "viewId": "evs-actual-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_MeasActClmpForce.rAct"
+        }
+      ],
+      "content": [
+        {
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_rClmpForceSet",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bClAndClmpPrBlt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "position": 20,
+      "viewId": "evs-panel",
+      "name": "Mold Protection Monitoring",
+      "header": [
+        {
+          "viewId": "evs-actual-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_dMldProtTimeActPDP"
+        }
+      ],
+      "content": [
+        {
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_dMldProtTimeSet",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bMldProtTime"
+            }
+          ]
+        },
+        {
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_Monitor.rMaxForce"
+        },
+        {
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_rMldProtBegPos",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bMldProtBeg"
+            }
+          ]
+        },
+        {
+          "viewId": "evs-switch",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bStopAfterMoldProt"
+        },
+        {
+          "viewId": "evs-switch",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bMldProtTest"
+        },
+        {
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_iMldProtCount"
+        }
+      ]
+    },
+	"__COMMENT__": "Snippets to be inserted here!"
+  ]
+}

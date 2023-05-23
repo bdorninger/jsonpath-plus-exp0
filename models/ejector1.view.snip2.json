@@ -1,0 +1,27 @@
+{
+  "viewModelId": "Ejector1",
+  "content": [
+    {
+      "contentId": "Ejector1.StartStopSettings",
+      "header": [
+        {
+          "viewId": "evs-actual-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_MeasActPos.rAct"
+        }
+      ],
+      "content": [
+        {
+          "position": 10,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_rMldOpenPos",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bMldOpen"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

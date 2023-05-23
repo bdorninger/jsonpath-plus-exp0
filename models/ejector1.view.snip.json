@@ -1,0 +1,21 @@
+{
+  "viewModelId": "Ejector1",
+  "content": [
+    {
+      "contentId": "Ejector1.PartRemoval",
+      "content": [
+        {
+          "position": 5,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Demolding/;s=sv_CyclePauseTime.dSetVal",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Demolding/;s=sv_CyclePauseTime.bActive"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

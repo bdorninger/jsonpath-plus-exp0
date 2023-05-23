@@ -1,0 +1,163 @@
+{
+  "viewModelId": "Ejector1",
+  "content": [
+    {
+      "viewId": "evs-panel",
+      "name": "Ejector movement profiles",
+      "columnCnt": 2,
+      "content": [
+        {
+          "viewId": "evs-actual-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_MeasActPos.rActDer"
+        },
+        {
+          "viewId": "evs-actual-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_MeasActPos.rActDer"
+        },
+        {
+          "viewId": "evs-chart-wrapper",
+          "base": "nsu=http://engelglobal.com/Graph/;s=GraphModel.Ejector1.sv_VisProfileGraphicEjeB"
+        },
+        {
+          "viewId": "evs-chart-wrapper",
+          "base": "nsu=http://engelglobal.com/Graph/;s=GraphModel.Ejector1.sv_VisProfileGraphicEjeF"
+        }    
+      ]
+    },
+    {
+      "viewId": "evs-panel",
+      "name": "Ejector positions",
+      "header": [
+        {
+          "viewId": "evs-actual-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_MeasActPos.rAct"
+        }
+      ],     
+      "content": [
+        {
+          "viewId": "evs-switch",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bAutoDetermineBack",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bStrokeDetermined"
+            }
+          ]
+        },
+        {
+          "viewId": "evs-line",
+          "content": [
+            {
+              "viewId": "evs-input-number",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_rEjeBPos"
+            },
+            {
+              "viewId": "evs-input-number",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_rEjeFPos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "contentId": "Ejector1.PartRemoval",
+      "viewId": "evs-panel",
+      "name": "Part removal",
+      "content": [
+        {
+          "position": 1,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_iEjectorCounter"
+        },
+        {
+          "position": 2,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_rEjeBPosMid",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bEjeBMidPos"
+            }
+          ]
+        },
+        {
+          "position": 3,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_rEjForwDelay",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bEjForwDelay"
+            }
+          ]
+        },
+        {
+          "position": 4,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_rEjForwTime",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bEjForwTime"
+            }
+          ]
+        },
+        {
+          "position": 5,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Demolding/;s=sv_CyclePauseTime.dSetVal",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Demolding/;s=sv_CyclePauseTime.bActive"
+            }
+          ]
+        },
+        {
+          "position": 6,
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_ForwardBackward",
+          "viewId": "evs-dropdown"
+        },
+        {
+          "position": 10,
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bNoEjeWithMldProt",
+          "viewId": "evs-switch"
+        },
+        {
+          "position": 11,
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bNoEjeAtReject",
+          "viewId": "evs-switch"
+        }
+      ]
+    },
+    {
+      "contentId": "Ejector1.StartStopSettings",
+      "viewId": "evs-panel",
+      "name": "Start, stop settings",
+      "content": [
+        {
+          "position": 20,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_rEjeStartPos",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bEjeStart"
+            }
+          ]
+        },
+        {
+          "position": 30,
+          "viewId": "evs-input-number",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_rEjeMonitorPos",
+          "content": [
+            {
+              "viewId": "evs-marker",
+              "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_bEjeMonitoringPos"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

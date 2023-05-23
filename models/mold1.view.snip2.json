@@ -1,0 +1,20 @@
+{
+  "viewModelId": "Mold1",
+  "content": [
+    {
+      "position": 100,
+      "viewId": "evs-panel",
+      "name": "Sequence settings",
+      "content": [
+        {
+          "viewId": "evs-dropdown",
+          "evsModel": "nsu=http://engelglobal.com/IMM/Machine/;s=sv_ReleaseSafety"
+        },
+        {
+          "viewId": "evs-switch",
+          "evsModel": "nsu=http://engelglobal.com/IMM/system/;s=sv_bHomerunAuto"
+        }
+      ]
+    }
+  ]
+}
