@@ -1,6 +1,6 @@
 {
   "viewModelId": "Mold1",
-  "insertId:": "top"
+  "insertId:": "top",
   "content": [
     {
       "position": 5,
@@ -59,7 +59,7 @@
                   "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_bMldOpen"
                 }
               ]
-                },
+            },
             {
               "viewId": "evs-input-number",
               "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_rMldClosedPos",
@@ -148,8 +148,8 @@
           "viewId": "evs-input-number",
           "evsModel": "nsu=http://engelglobal.com/IMM/Mold1/;s=sv_iMldProtCount"
         }
-      ]
-    },
-	"__COMMENT__": "Snippets to be inserted here!"
+      ],
+      "__COMMENT__": "Snippets to insert below this object!"
+    }
   ]
 }
