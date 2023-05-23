@@ -3,6 +3,7 @@ import { JSONPath } from 'jsonpath-plus';
 interface FilterOptions<T extends VT = string> {
   property?: string;
   value?: T;
+  operator?: FilterOperator;
   useValueFromJson?: boolean;
 }
 
@@ -17,19 +18,25 @@ export interface MergeOptions<T extends VT = string> extends FilterOptions<T> {
   sort?: boolean;
 }
 
+export type FilterOperator = 'eq' | 'neq';
+
 export interface RemoveOptions<T extends VT = string>
   extends FilterOptions<T> {}
 
-export function extractSnippets<T extends MT>(
-  modelOrSnippet: T
+/**
+ *
+ */
+/* export function extractSnippets<T extends MT, K extends keyof ViewBaseData>(
+  modelOrSnippet: T,
+  filter?: { attribute: K; value: ViewBaseData[K] }
 ): { insertId: 'string'; position?: number }[] {
-  const path = `$..*[?(@.insertId!=null)]`;
+  const path = `$..*[?(@.${filter?.attribute ?? 'contributor'}!=null)]`;
   const results = JSONPath({
     json: modelOrSnippet,
     path: path,
   });
   return results as any;
-}
+}*/
 
 /**
  *
@@ -116,6 +123,70 @@ export function merge<M extends MT, O extends VT = string>(
   return modelSrc;
 }
 
+function selectOrRemove<M extends MT, O extends VT = string>(
+  modelSrc: M,
+  options: RemoveOptions<O>,
+  operation: 'remove' | 'select'
+): any[] {
+  /* if (options.value == null) {
+    throw new Error(
+      `a value to filter for removal candidates must be provided in the Remove Options!`
+    );
+  }*/
+
+  const prop = options.property ?? 'evsModel';
+  const value =
+    typeof options.value === 'string' ? escape(options.value) : options.value;
+
+  const pathExp = `$..*[?(@property==='${prop}' && @ ${getOperatorString(
+    options.operator ?? 'eq'
+  )}'${value}')]^`;
+
+  console.log(pathExp);
+  const results: any[] = JSONPath({
+    json: modelSrc,
+    path: pathExp,
+    wrap: true,
+    /* callback: (pl, pt, fpl) =>
+      console.log(`remove callback payloads`, pl, pt, fpl),*/
+  });
+
+  const allRemovedOrSelected: any[] = [];
+  console.log('All sel/Rem results', results);
+  results.forEach((res) => {
+    if (Array.isArray(res)) {
+      console.log('arrays: ', res);
+      const rmInd = res.findIndex((elem, i) => {
+        const expr = `elem[prop]${getOperatorString(
+          options?.operator ?? 'eq'
+        )}options.value`;
+        console.log(`before eval`, i, expr, elem[prop]);
+        const evret = eval(expr);
+        console.log('eval', i, evret);
+        return evret;
+      });
+      // console.log(`found ${prop} = ${options.value} at Index${rmInd}`);
+      if (rmInd >= 0) {
+        const removedOrSelected =
+          operation === 'remove' ? res.splice(rmInd, 1)[0] : res[rmInd];
+        allRemovedOrSelected.push(removedOrSelected);
+      }
+    }
+  });
+
+  return allRemovedOrSelected;
+}
+
+/**
+ * removes entries from arrays which fulfill a provided filter expression
+ */
+export function select<M extends MT, O extends VT = string>(
+  modelSrc: M,
+  options: RemoveOptions<O>
+): any[] {
+  return selectOrRemove(modelSrc, options, 'select');
+}
+
 /**
  * removes entries from arrays which fulfill a provided filter expression
  */
@@ -123,38 +194,7 @@ export function remove<M extends MT, O extends VT = string>(
   modelSrc: M,
   options: RemoveOptions<O>
 ): any[] {
-  if (options.value == null) {
-    throw new Error(
-      `a value to filter for removal candidates must be provided in the Remove Options!`
-    );
-  }
-
-  const prop = options.property ?? 'evsModel';
-  const value =
-    typeof options.value === 'string' ? escape(options.value) : options.value;
-
-  const results: any[] = JSONPath({
-    json: modelSrc,
-    path: `$..*[?(@.${prop}==="${value}")]^`,
-    wrap: true,
-    /* callback: (pl, pt, fpl) =>
-      console.log(`remove callback payloads`, pl, pt, fpl),*/
-  });
-
-  const removed: any[] = [];
-
-  results.forEach((res) => {
-    // console.log('arrays: ', res);
-    if (Array.isArray(res)) {
-      const rmInd = res.findIndex((elem) => elem[prop] === options.value);
-      // console.log(`found ${prop} = ${options.value} at Index${rmInd}`);
-      if (rmInd >= 0) {
-        removed.push(...res.splice(rmInd, 1));
-      }
-    }
-  });
-
-  return removed;
+  return selectOrRemove(modelSrc, options, 'remove');
 }
 
 function adjustIndexToArrayBounds(arr: any[], rInd: number): number {
@@ -208,6 +248,17 @@ function insertSnip(
  */
 export function escape(str: string): string {
   return str.replaceAll(';', '\\u003b');
+}
+
+export function getOperatorString(op: FilterOperator) {
+  switch (op) {
+    case 'eq':
+      return '===';
+    case 'neq':
+      return '!==';
+    default:
+      throw new Error(`Unknown Operator "${op}"`);
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 import { viewdata, viewsnip, viewsnip3 } from './data';
-import { extractSnippets, merge, remove } from './merge';
+import { merge, remove, select } from './merge';
 
 /**
  *
@@ -7,7 +7,7 @@ import { extractSnippets, merge, remove } from './merge';
 export function basicMerges() {
   const model = viewdata;
   const snip = viewsnip;
-
+  /*
   let merged = merge(model, snip, {
     pos: 'after',
     property: 'evsModel',
@@ -15,7 +15,7 @@ export function basicMerges() {
     contributor: '_IMM_',
   });
 
-  /*merged = merge(
+  merged = merge(
   merged,
   { evsModel: 'mySuperDuperModel000', viewId: 'input' },
   {
@@ -38,7 +38,7 @@ merged = merge(
     contributor: 'SEPP',
   }
 );*/
-
+  /*
   merged = merge(
     merged,
     { evsModel: 'mySuperDuperModel999', viewId: 'input', position: 35 },
@@ -65,6 +65,7 @@ merged = merge(
 
   const mergedClone = structuredClone(merged);
   console.log('Mergerd model', mergedClone);
+*/
 
   // remove all marker views.....
   /*
@@ -75,13 +76,17 @@ const allRemoved = remove<object, string>(merged, {
 */
 
   // remove all view contributed by _IMM_
-  const allRemoved = remove<object, string>(merged, {
+  /* const allRemoved = remove<object, string>(merged, {
     property: 'contributor',
     value: '_IMM_',
   });
 
   console.log('after remove', merged, allRemoved);
-
-  const results = extractSnippets(viewsnip3);
+*/
+  const results = select(viewsnip3, {
+    property: 'insertAt',
+    value: undefined,
+    operator: 'neq',
+  });
   console.log(`extracted snips`, results);
 }

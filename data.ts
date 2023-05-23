@@ -11,13 +11,16 @@ export interface ViewConfigMeta extends CommentedObject {
   constributor?: string;
 }*/
 
-export interface ViewData extends CommentedObject {
+export interface ViewBaseData {
   name?: string;
   viewId?: string;
   evsModel?: string;
   insertionPoint?: string;
   insertAt?: string;
   position?: number; // sort pos
+}
+
+export interface ViewData extends ViewBaseData, CommentedObject {
   header?: ViewHeaderData[];
   content?: ViewContentData[];
 }
@@ -220,7 +223,6 @@ export function initData() {
   viewsnip3 = {
     viewId: 'evs-panel',
     name: 'something snippet',
-    // insertionPoint: 'top',
     position: 22,
     content: [
       {
@@ -235,6 +237,11 @@ export function initData() {
         position: 25,
         evsModel:
           'nsu=http://engelglobal.com/IMM/AirValve1/;s=sv_rActualActiveTime',
+      },
+      {
+        viewId: 'evs-actual-text',
+        position: 88,
+        evsModel: 'nsu=http://never',
       },
     ],
   };
