@@ -87,6 +87,7 @@ const allRemoved = remove<object, string>(merged, {
     property: 'insertAt',
     value: undefined,
     operator: 'neq',
-  });
-  console.log(`extracted snips`, results);
+  })
+    .then((results) => console.log(`extracted snips`, results))
+    .catch((err) => console.error(err));
 }

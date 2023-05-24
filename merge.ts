@@ -123,77 +123,68 @@ export function merge<M extends MT, O extends VT = string>(
   return modelSrc;
 }
 
-function selectOrRemove<M extends MT, O extends VT = string>(
+function selectOrRemove<M extends MT, O extends VT = string, R = any>(
   modelSrc: M,
   options: RemoveOptions<O>,
   operation: 'remove' | 'select'
-): any[] {
-  /* if (options.value == null) {
-    throw new Error(
-      `a value to filter for removal candidates must be provided in the Remove Options!`
-    );
-  }*/
+): Promise<R[]> {
+  return new Promise<R[]>((resolver, rejector) => {
+    const prop = options.property ?? 'evsModel';
+    const value =
+      typeof options.value === 'string' ? escape(options.value) : options.value;
 
-  const prop = options.property ?? 'evsModel';
-  const value =
-    typeof options.value === 'string' ? escape(options.value) : options.value;
+    const pathExp = `$..*[?(@property==='${prop}' && @ ${getOperatorString(
+      options.operator ?? 'eq'
+    )}'${value}')]^`;
 
-  const pathExp = `$..*[?(@property==='${prop}' && @ ${getOperatorString(
-    options.operator ?? 'eq'
-  )}'${value}')]^`;
-
-  console.log(pathExp);
-  const results: any[] = JSONPath({
-    json: modelSrc,
-    path: pathExp,
-    wrap: true,
-    /* callback: (pl, pt, fpl) =>
-      console.log(`remove callback payloads`, pl, pt, fpl),*/
-  });
-
-  const allRemovedOrSelected: any[] = [];
-  console.log('All sel/Rem results', results);
-  results.forEach((res) => {
-    if (Array.isArray(res)) {
-      console.log('arrays: ', res);
-      const rmInd = res.findIndex((elem, i) => {
-        const expr = `elem[prop]${getOperatorString(
-          options?.operator ?? 'eq'
-        )}options.value`;
-        console.log(`before eval`, i, expr, elem[prop]);
-        const evret = eval(expr);
-        console.log('eval', i, evret);
-        return evret;
+    console.log(pathExp);
+    try {
+      const selected: R[] = [];
+      const results: any[] = JSONPath({
+        json: modelSrc,
+        path: pathExp,
+        wrap: true,
+        callback: (selectedValueOrProperty, resultType, fullPathPayload) => {
+          console.log(
+            `remove callback payloads`,
+            selectedValueOrProperty,
+            resultType,
+            fullPathPayload
+          );
+          selected.push(selectedValueOrProperty);
+          if (
+            operation === 'remove' &&
+            resultType === 'value' &&
+            Array.isArray(fullPathPayload.parent)
+          ) {
+            // TODO: remove the val
+          }
+        },
       });
-      // console.log(`found ${prop} = ${options.value} at Index${rmInd}`);
-      if (rmInd >= 0) {
-        const removedOrSelected =
-          operation === 'remove' ? res.splice(rmInd, 1)[0] : res[rmInd];
-        allRemovedOrSelected.push(removedOrSelected);
-      }
+      resolver(selected);
+    } catch (err) {
+      rejector(err);
     }
   });
-
-  return allRemovedOrSelected;
 }
 
 /**
  * removes entries from arrays which fulfill a provided filter expression
  */
-export function select<M extends MT, O extends VT = string>(
+export function select<M extends MT, O extends VT = string, R = any>(
   modelSrc: M,
   options: RemoveOptions<O>
-): any[] {
+): Promise<R[]> {
   return selectOrRemove(modelSrc, options, 'select');
 }
 
 /**
  * removes entries from arrays which fulfill a provided filter expression
  */
-export function remove<M extends MT, O extends VT = string>(
+export function remove<M extends MT, O extends VT = string, R = any>(
   modelSrc: M,
   options: RemoveOptions<O>
-): any[] {
+): Promise<R[]> {
   return selectOrRemove(modelSrc, options, 'remove');
 }
 
@@ -311,3 +302,52 @@ const moPos: MergeOptions = {
   pos: 'content',
   index: 'position',
 };
+
+/* function selectOrRemove2<M extends MT, O extends VT = string, R = any>(
+  modelSrc: M,
+  options: RemoveOptions<O>,
+  operation: 'remove' | 'select'
+): R[] {
+  
+  const prop = options.property ?? 'evsModel';
+  const value =
+    typeof options.value === 'string' ? escape(options.value) : options.value;
+
+  const pathExp = `$..*[?(@property==='${prop}' && @ ${getOperatorString(
+    options.operator ?? 'eq'
+  )}'${value}')]^`;
+
+  console.log(pathExp);
+  const results: any[] = JSONPath({
+    json: modelSrc,
+    path: pathExp,
+    wrap: true,
+    callback: (pl, pt, fpl) =>
+      console.log(`remove callback payloads`, pl, pt, fpl),
+  });
+
+  const allRemovedOrSelected: any[] = [];
+  console.log('All sel/Rem results', results);
+  results.forEach((res) => {
+    if (Array.isArray(res)) {
+      console.log('arrays: ', res);
+      const rmInd = res.findIndex((elem, i) => {
+        const expr = `elem[prop]${getOperatorString(
+          options?.operator ?? 'eq'
+        )}options.value`;
+        console.log(`before eval`, i, expr, elem[prop]);
+        const evret = eval(expr);
+        console.log('eval', i, evret);
+        return evret;
+      });
+      // console.log(`found ${prop} = ${options.value} at Index${rmInd}`);
+      if (rmInd >= 0) {
+        const removedOrSelected =
+          operation === 'remove' ? res.splice(rmInd, 1)[0] : res[rmInd];
+        allRemovedOrSelected.push(removedOrSelected);
+      }
+    }
+  });
+
+  return allRemovedOrSelected;
+}*/
