@@ -135,11 +135,11 @@ function selectOrRemove<M extends MT, O extends VT = string, R = any>(
 
     const pathExp = `$..*[?(@property==='${prop}' && @ ${getOperatorString(
       options.operator ?? 'eq'
-    )}'${value}')]^`;
+    )}${value})]^`;
 
     console.log(pathExp);
     try {
-      const selected: R[] = [];
+      const selected: Set<R> = new Set();
       const results: any[] = JSONPath({
         json: modelSrc,
         path: pathExp,
@@ -151,7 +151,7 @@ function selectOrRemove<M extends MT, O extends VT = string, R = any>(
             resultType,
             fullPathPayload
           );
-          selected.push(selectedValueOrProperty);
+          selected.add(selectedValueOrProperty);
           if (
             operation === 'remove' &&
             resultType === 'value' &&
@@ -161,7 +161,7 @@ function selectOrRemove<M extends MT, O extends VT = string, R = any>(
           }
         },
       });
-      resolver(selected);
+      resolver(Array.from(selected));
     } catch (err) {
       rejector(err);
     }

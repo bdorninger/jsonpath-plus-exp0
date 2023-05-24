@@ -1,4 +1,4 @@
-import { viewdata, viewsnip, viewsnip3 } from './data';
+import { sample, viewdata, viewsnip, viewsnip3 } from './data';
 import { merge, remove, select } from './merge';
 
 /**
@@ -83,11 +83,21 @@ const allRemoved = remove<object, string>(merged, {
 
   console.log('after remove', merged, allRemoved);
 */
-  const results = select(viewsnip3, {
+  select(sample, {
+    property: 'abc',
+    value: 666,
+    operator: 'eq',
+  })
+    .then((results) => console.log(`extracted snips`, results))
+    .catch((err) => console.error(err));
+
+  /*
+  select(viewsnip3, {
     property: 'insertAt',
     value: undefined,
     operator: 'neq',
   })
     .then((results) => console.log(`extracted snips`, results))
     .catch((err) => console.error(err));
+    */
 }

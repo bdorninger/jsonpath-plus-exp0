@@ -57,6 +57,7 @@ export function initData() {
           author: 'Evelyn Waugh',
           title: 'Sword of Honour',
           price: 12.99,
+          abc: 666,
         },
         {
           category: 'fiction',
@@ -76,6 +77,14 @@ export function initData() {
       bicycle: {
         color: 'red',
         price: 19.95,
+      },
+      nokia: {
+        abc: 666,
+      },
+      moto: {
+        sub: {
+          abc: 666,
+        },
       },
     },
   };
