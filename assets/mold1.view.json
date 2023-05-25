@@ -1,6 +1,6 @@
 {
   "viewModelId": "Mold1",
-  "insertId:": "top",
+  "insertionPoint:": "top",
   "content": [
     {
       "position": 5,
@@ -40,6 +40,7 @@
       "position": 10,
       "viewId": "evs-panel",
       "name": "Mold stroke position",
+      "insertionPoint": "Mold.strokePos",
       "header": [
         {
           "viewId": "evs-actual-number",

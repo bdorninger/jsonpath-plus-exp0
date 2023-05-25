@@ -2,7 +2,7 @@
   "viewModelId": "Ejector1",
   "content": [
     {
-      "contentId": "Ejector1.PartRemoval",
+      "insertAt": "Ejector1.PartRemoval",
       "content": [
         {
           "position": 5,

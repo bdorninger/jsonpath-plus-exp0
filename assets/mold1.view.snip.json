@@ -1,0 +1,18 @@
+{
+  "viewModelId": "Mold1",
+  "__COMMENT__": "A snippet without any insertAt ID. Causes the elements of the outmost 'content' array to be inserted into the destinations outmost 'content' array\nWe could also provide an entry 'insertAt' which will insert all the elements at the desired position in the target marked by e.g. 'insertionPoint'\nOf course each element could provide its own 'insertAt'. In that case the snippets might go to different insertionPoints\nGlobal meta info of a model/snippet may be concentrated into a 'meta' data section\nInsertionPoints and insertAt must reside at the correct position in the snippet data and the target model respectively\ninsertAt might also be a JSON path, we can also use another special element as well, e.g. 'insertAtPath'",
+  "content": [
+    {
+      "position": 30,
+      "viewId": "evs-panel",
+      "name": "Ejector plate safety",
+      "content": [
+        {
+          "viewId": "evs-marker",
+          "evsModel": "nsu=http://engelglobal.com/IMM/ExtClosingBlock1/;s=di_ExtClosingBlock",
+          "displayName": true
+        }
+      ]
+    }
+  ]
+}

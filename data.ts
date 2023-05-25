@@ -57,7 +57,6 @@ export function initData() {
           author: 'Evelyn Waugh',
           title: 'Sword of Honour',
           price: 12.99,
-          abc: 666,
         },
         {
           category: 'fiction',
@@ -65,6 +64,7 @@ export function initData() {
           title: 'Moby Dick',
           isbn: '0-553-21311-3',
           price: 8.99,
+          abc: 666,
         },
         {
           category: 'fiction',
@@ -79,10 +79,13 @@ export function initData() {
         price: 19.95,
       },
       nokia: {
+        name: 'karl',
         abc: 666,
       },
       moto: {
         sub: {
+          name: 'hugo',
+          ssk: true,
           abc: 666,
         },
       },

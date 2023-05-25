@@ -21,7 +21,7 @@
         {
           "viewId": "evs-chart-wrapper",
           "base": "nsu=http://engelglobal.com/Graph/;s=GraphModel.Ejector1.sv_VisProfileGraphicEjeF"
-        }    
+        }
       ]
     },
     {
@@ -32,7 +32,7 @@
           "viewId": "evs-actual-number",
           "evsModel": "nsu=http://engelglobal.com/IMM/Ejector1/;s=sv_MeasActPos.rAct"
         }
-      ],     
+      ],
       "content": [
         {
           "viewId": "evs-switch",
@@ -60,7 +60,7 @@
       ]
     },
     {
-      "contentId": "Ejector1.PartRemoval",
+      "insertionPoint": "Ejector1.PartRemoval",
       "viewId": "evs-panel",
       "name": "Part removal",
       "content": [
@@ -131,7 +131,7 @@
       ]
     },
     {
-      "contentId": "Ejector1.StartStopSettings",
+      "insertionPoint": "Ejector1.StartStopSettings",
       "viewId": "evs-panel",
       "name": "Start, stop settings",
       "content": [

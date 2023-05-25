@@ -2,7 +2,7 @@
   "viewModelId": "Ejector1",
   "content": [
     {
-      "contentId": "Ejector1.StartStopSettings",
+      "insertAt": "Ejector1.StartStopSettings",
       "header": [
         {
           "viewId": "evs-actual-number",

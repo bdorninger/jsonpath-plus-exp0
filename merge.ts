@@ -24,22 +24,7 @@ export interface RemoveOptions<T extends VT = string>
   extends FilterOptions<T> {}
 
 /**
- *
- */
-/* export function extractSnippets<T extends MT, K extends keyof ViewBaseData>(
-  modelOrSnippet: T,
-  filter?: { attribute: K; value: ViewBaseData[K] }
-): { insertId: 'string'; position?: number }[] {
-  const path = `$..*[?(@.${filter?.attribute ?? 'contributor'}!=null)]`;
-  const results = JSONPath({
-    json: modelOrSnippet,
-    path: path,
-  });
-  return results as any;
-}*/
-
-/**
- *
+ * merges two models/snippets by considering the specified options
  */
 export function merge<M extends MT, O extends VT = string>(
   modelSrc: M,
@@ -58,8 +43,8 @@ export function merge<M extends MT, O extends VT = string>(
     json: modelSrc,
     path: path,
     wrap: true,
-    /* callback: (pl, pt, fpl) =>
-      console.log(`jsonpath callback payloads`, pl, pt, fpl),*/
+    callback: (pl, pt, fpl) =>
+      console.log(`jsonpath callback payloads`, pl, pt, fpl)
   });
 
   if (results.length > 0) {
@@ -137,7 +122,6 @@ function selectOrRemove<M extends MT, O extends VT = string, R = any>(
       options.operator ?? 'eq'
     )}${value})]^`;
 
-    console.log(pathExp);
     try {
       const selected: Set<R> = new Set();
       const results: any[] = JSONPath({
@@ -145,19 +129,19 @@ function selectOrRemove<M extends MT, O extends VT = string, R = any>(
         path: pathExp,
         wrap: true,
         callback: (selectedValueOrProperty, resultType, fullPathPayload) => {
-          console.log(
+          /* console.log(
             `remove callback payloads`,
             selectedValueOrProperty,
             resultType,
             fullPathPayload
-          );
+          );*/
           selected.add(selectedValueOrProperty);
-          if (
-            operation === 'remove' &&
-            resultType === 'value' &&
-            Array.isArray(fullPathPayload.parent)
-          ) {
-            // TODO: remove the val
+          if (operation === 'remove' && resultType === 'value') {
+            const removed = deleteValue(
+              fullPathPayload.parent,
+              fullPathPayload.parentProperty
+            );
+            // console.log(`removed@:${fullPathPayload.parentProperty}`, removed);
           }
         },
       });
@@ -188,6 +172,32 @@ export function remove<M extends MT, O extends VT = string, R = any>(
   return selectOrRemove(modelSrc, options, 'remove');
 }
 
+//
+// non api helper function for deleting
+//
+function deleteValue(
+  parentObjectOrArray: any[] | object,
+  propertyOrIndex: number | string
+) {
+  let removed: any = undefined;
+
+  if (
+    Array.isArray(parentObjectOrArray) &&
+    typeof propertyOrIndex === 'number'
+  ) {
+    removed = parentObjectOrArray.splice(propertyOrIndex, 1)[0];
+  } else if (
+    typeof parentObjectOrArray === 'object' &&
+    typeof propertyOrIndex === 'string'
+  ) {
+    const p = parentObjectOrArray as any;
+    removed = p[propertyOrIndex];
+    delete p[propertyOrIndex];
+  }
+  return removed;
+}
+
+// helper function
 function adjustIndexToArrayBounds(arr: any[], rInd: number): number {
   let ind = rInd;
   if (ind < 0) {
@@ -199,6 +209,7 @@ function adjustIndexToArrayBounds(arr: any[], rInd: number): number {
   return ind;
 }
 
+// helper function
 function insertSnip(
   arr: any[],
   snip: any,
