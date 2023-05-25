@@ -1,5 +1,12 @@
 import { ajax } from 'rxjs/ajax';
-import { sample, ViewConfig, viewdata, viewsnip, viewsnip3 } from './data';
+import {
+  readData,
+  sample,
+  ViewConfig,
+  viewdata,
+  viewsnip,
+  viewsnip3,
+} from './data';
 import { merge, remove, select } from './merge';
 
 /**
@@ -8,7 +15,8 @@ import { merge, remove, select } from './merge';
 export function basicMerges() {
   const model = viewdata;
   const snip = viewsnip;
-  let obs$ = ajax.getJSON<ViewConfig>(`/assets/mold1.view.json`);
+
+  let obs$ = readData('mold1.view.json');
   obs$.subscribe({
     next: (val) => console.log(`Read: `, val),
     error: (err) => console.error(err),

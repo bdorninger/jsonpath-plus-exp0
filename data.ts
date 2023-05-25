@@ -1,3 +1,6 @@
+import { from, map, Observable } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+
 export interface CommentedObject {
   __COMMENT__?: string;
 }
@@ -35,12 +38,48 @@ export interface ViewConfig extends CommentedObject, ViewData {
   meta?: ViewConfigMeta;
 }
 
+/*
+
+interface AjaxRequest {
+  url: string
+  body?: any 
+  method: string
+  async: boolean
+  headers: Readonly<Record<string, any>>
+  timeout: number
+  user?: string
+  password?: string
+  crossDomain: boolean
+  withCredentials: boolean
+  responseType: XMLHttpRequestResponseType
+}
+
+*/
+
 export let sample = {};
 export let foodata = {};
 export let fdata = {};
 export let viewdata: ViewConfig = {};
 export let viewsnip: ViewConfig = {};
 export let viewsnip3: ViewConfig = {};
+
+export function readData<T>(name: string): Observable<T> {
+  console.log('Request', name);
+  // https://stackblitz.com/files/rxjs-p7boik/github/bdorninger/jsonpath-plus-exp0/master/assets/ejector1.view.json
+  // return from(import(`./assets/${name}`));
+  // https://cdn.jsdelivr.net/gh/bdorninger/jsonpath-plus-exp0@master/assets/ejector1.view.json
+  // https://rxjs-p7boik.stackblitz.io
+  const response = ajax<T>({
+    url: `https://stackblitz.com/files/rxjs-p7boik/github/bdorninger/jsonpath-plus-exp0@master/assets/${name}`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    crossDomain: true,
+    // responseType: 'json',
+  });
+  return response.pipe(map((resp) => resp.response));
+}
 
 export function initData() {
   sample = {
