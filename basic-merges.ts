@@ -34,12 +34,12 @@ export function basicMerges() {
 
   const process$ = new Subject<void>();
 
-  const viewDataName = 'mold1.view.json';
+  const viewDataName = 'mold1.view.main.json';
   const viewSnippetName = 'mold1.view.snip.json';
   console.log(`Requesting ${viewDataName} and snippet ${viewSnippetName}`);
   let obs$ = readData<ViewConfig>(viewDataName);
   let obs2$ = readData<ViewConfig>(viewSnippetName);
-
+  /*
   obs$.pipe(mergeWith(obs2$), buffer(process$)).subscribe({
     next: (val) =>
       console.log(
@@ -49,38 +49,50 @@ export function basicMerges() {
     error: (err) => console.error(err),
     complete: () => process$.next(),
   });
-  /*
-  let merged = merge(model, snip, {
+*/
+  let merged: any;
+  merged = merge(model, snip, {
     pos: 'after',
     property: 'evsModel',
     value: 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_rActiveTime',
     contributor: '_IMM_',
   });
-*/
 
-  /*merged = merge(
-  merged,
-  { evsModel: 'mySuperDuperModel000', viewId: 'input' },
-  {
-    property: 'insertId',
-    value: 'myId',
-    pos: 'content',
-    index: 1,
-    contributor: 'KARL',
-  }
-);*/
-  /*
-merged = merge(
-  merged,
-  { evsModel: 'mySuperDuperModel123', viewId: 'input', position: 14 },
-  {
-    property: 'insertId',
-    value: 'myId',
-    pos: 'content',
-    index: 'position',
-    contributor: 'SEPP',
-  }
-);*/
+  merged = merge(
+    merged,
+    { evsModel: 'mySuperDuperModel000', viewId: 'input' },
+    {
+      property: 'insertionPoint',
+      value: 'myId',
+      pos: 'content',
+      index: 1,
+      contributor: 'KARL',
+    }
+  );
+
+  merged = merge(
+    merged,
+    { evsModel: 'mySuperDuperModel123', viewId: 'input', position: 14 },
+    {
+      property: 'insertionPoint',
+      value: 'myId',
+      pos: 'content',
+      index: 'position',
+      contributor: 'SEPP',
+    }
+  );
+
+  merged = merge(
+    merged,
+    { evsModel: 'myTOPModel', viewId: 'output', position: 999 },
+    {
+      property: 'insertionPoint',
+      value: 'top',
+      pos: 'content',
+      index: 'position',
+      contributor: 'HUGO',
+    }
+  );
   /*
   merged = merge(
     merged,
@@ -105,10 +117,9 @@ merged = merge(
       contributor: 'TONI',
     }
   );
-
+*/
   const mergedClone = structuredClone(merged);
   console.log('Mergerd model', mergedClone);
-*/
 
   // remove all marker views.....
   /*

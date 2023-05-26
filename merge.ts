@@ -34,11 +34,17 @@ export function merge<M extends MT, O extends VT = string>(
   const prop = options.property ?? 'evsModel';
   const value =
     typeof options.value === 'string' ? escape(options.value) : options.value;
-
-  const path = `$..*[?(@.${prop}==="${value}")]${
+  /*
+  const path = `$..[?(@.${prop} === '${value}')]${
     options.pos === 'content' || options.pos === 'header' ? '' : '^'
   }`;
-  console.log(`Merging.....path is ${path}`);
+  */
+
+  const path = `$..[?(@property === '${prop}' && @ === ${value})]^`;
+
+  // const path = `$..[?(@property === 'insertionPoint')]`;
+
+  console.log(`Merging.....path is ${path}`, options, modelSrc);
   const results: any[] = JSONPath({
     json: modelSrc,
     path: path,
@@ -249,7 +255,7 @@ function insertSnip(
  * JSONPath plus cannot handle semicolons in queries????
  */
 export function escape(str: string): string {
-  return str.replaceAll(';', '\\u003b');
+  return `'${str.replaceAll(';', '\\u003b')}'`;
 }
 
 export function getOperatorString(op: FilterOperator) {
