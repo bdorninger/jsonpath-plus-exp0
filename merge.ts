@@ -38,15 +38,15 @@ export function merge<M extends MT, O extends VT = string>(
   const path = `$..*[?(@.${prop}==="${value}")]${
     options.pos === 'content' || options.pos === 'header' ? '' : '^'
   }`;
-
+  console.log(`Merging.....path is ${path}`);
   const results: any[] = JSONPath({
     json: modelSrc,
     path: path,
     wrap: true,
     callback: (pl, pt, fpl) =>
-      console.log(`jsonpath callback payloads`, pl, pt, fpl)
+      console.log(`jsonpath callback payloads`, pl, pt, fpl),
   });
-
+  console.log(`Results`, results);
   if (results.length > 0) {
     const destObject = results[0];
     if (

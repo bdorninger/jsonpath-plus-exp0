@@ -1,6 +1,7 @@
 {
   "viewModelId": "Mold1",
-  "insertionPoint:": "top",
+  "insertionPoint": "top",
+  "bloed": "nix",
   "content": [
     {
       "position": 5,

@@ -35,6 +35,7 @@ export interface ViewHeaderData extends ViewData {}
 export interface ViewContentData extends ViewData {}
 
 export interface ViewConfig extends CommentedObject, ViewData {
+  viewModelId?: string;
   meta?: ViewConfigMeta;
 }
 
@@ -49,9 +50,9 @@ interface AjaxRequest {
   timeout: number
   user?: string
   password?: string
-  crossDomain: boolean
+  crossDomain: boolean 
   withCredentials: boolean
-  responseType: XMLHttpRequestResponseType
+  responseType: XMLHttpRequestResponseType 
 }
 
 */
@@ -64,16 +65,19 @@ export let viewsnip: ViewConfig = {};
 export let viewsnip3: ViewConfig = {};
 
 export function readData<T>(name: string): Observable<T> {
-  console.log('Request', name);
-  // https://stackblitz.com/files/rxjs-p7boik/github/bdorninger/jsonpath-plus-exp0/master/assets/ejector1.view.json
-  // return from(import(`./assets/${name}`));
+  // This URLs currently works for accessing static content, but may may cease to work!
   // https://cdn.jsdelivr.net/gh/bdorninger/jsonpath-plus-exp0@master/assets/ejector1.view.json
-  // https://rxjs-p7boik.stackblitz.io
+  // This URL does not work here (only if queried interactively thru a browser where it forwards to the former URL)
+  // Here, it produces a CORS violation....
+  // https://stackblitz.com/files/rxjs-p7boik/github/bdorninger/jsonpath-plus-exp0/master/assets/ejector1.view.json
+
   const response = ajax<T>({
-    url: `https://stackblitz.com/files/rxjs-p7boik/github/bdorninger/jsonpath-plus-exp0@master/assets/${name}`,
+    url: `https://cdn.jsdelivr.net/gh/bdorninger/jsonpath-plus-exp0@master/assets/${name}`,
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
+      //'Access-Control-Request-Headers': 'Access-Control-Allow-Origin',
+      // 'Referrer-Policy': 'strict-origin-when-cross-origin',
+      Accept: 'application/json',
     },
     crossDomain: true,
     // responseType: 'json',

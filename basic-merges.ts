@@ -1,3 +1,4 @@
+import { buffer, mergeWith, Subject } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
   readData,
@@ -9,6 +10,21 @@ import {
 } from './data';
 import { merge, remove, select } from './merge';
 
+function mergeViews(views: ViewConfig[]): ViewConfig {
+  console.log(`Merge Views: `, views);
+
+  merge(views[0], views[1], {
+    property: 'insertionPoint',
+    value: 'top',
+    pos: 'content',
+    index: 'position',
+
+    contributor: 'DEVICE',
+  });
+
+  return views[0];
+}
+
 /**
  *
  */
@@ -16,11 +32,22 @@ export function basicMerges() {
   const model = viewdata;
   const snip = viewsnip;
 
-  let obs$ = readData('mold1.view.json');
-  obs$.subscribe({
-    next: (val) => console.log(`Read: `, val),
+  const process$ = new Subject<void>();
+
+  const viewDataName = 'mold1.view.json';
+  const viewSnippetName = 'mold1.view.snip.json';
+  console.log(`Requesting ${viewDataName} and snippet ${viewSnippetName}`);
+  let obs$ = readData<ViewConfig>(viewDataName);
+  let obs2$ = readData<ViewConfig>(viewSnippetName);
+
+  obs$.pipe(mergeWith(obs2$), buffer(process$)).subscribe({
+    next: (val) =>
+      console.log(
+        `Merged ${val[0]?.viewModelId} with ${val[1]?.viewModelId}`,
+        mergeViews(val)
+      ),
     error: (err) => console.error(err),
-    complete: () => console.log(`complete`),
+    complete: () => process$.next(),
   });
   /*
   let merged = merge(model, snip, {
@@ -103,11 +130,14 @@ const allRemoved = remove<object, string>(merged, {
   /* select(sample, {
     property: 'abc',
     value: 666,
-    operator: 'eq',
+    operator: 'eq', 
   })
     .then((results) => console.log(`extracted snips`, results))
     .catch((err) => console.error(err));
 */
+
+  /*
+
   const sampleClone = structuredClone(sample);
   remove(sampleClone, {
     property: 'abc',
@@ -139,4 +169,5 @@ const allRemoved = remove<object, string>(merged, {
       console.log(`extracted snips`, results);
     })
     .catch((err) => console.error(err));
+    */
 }
