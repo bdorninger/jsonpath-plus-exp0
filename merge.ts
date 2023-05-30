@@ -23,6 +23,9 @@ export type FilterOperator = 'eq' | 'neq';
 export interface RemoveOptions<T extends VT = string>
   extends FilterOptions<T> {}
 
+export interface SelectOptions<T extends VT = string>
+  extends FilterOptions<T> {}
+
 /**
  * merges two models/snippets by considering the specified options
  */
@@ -44,7 +47,7 @@ export function merge<M extends MT, O extends VT = string>(
 
   // const path = `$..[?(@property === 'insertionPoint')]`;
 
-  console.log(`Merging.....path is ${path}`, options, modelSrc);
+  // console.log(`Merging.....path is ${path}`, options, modelSrc);
   const results: any[] = JSONPath({
     json: modelSrc,
     path: path,
@@ -52,7 +55,7 @@ export function merge<M extends MT, O extends VT = string>(
     callback: (pl, pt, fpl) =>
       console.log(`jsonpath callback payloads`, pl, pt, fpl),
   });
-  console.log(`Results`, results);
+  // console.log(`Results`, results);
   if (results.length > 0) {
     const destObject = results[0];
     if (
@@ -163,7 +166,7 @@ function selectOrRemove<M extends MT, O extends VT = string, R = any>(
  */
 export function select<M extends MT, O extends VT = string, R = any>(
   modelSrc: M,
-  options: RemoveOptions<O>
+  options: SelectOptions<O>
 ): Promise<R[]> {
   return selectOrRemove(modelSrc, options, 'select');
 }
