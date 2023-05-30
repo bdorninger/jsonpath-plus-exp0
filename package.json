@@ -5,8 +5,18 @@
   "dependencies": {
     "@types/jasmine": "^4.3.2",
     "jasmine-core": "^5.0.0",
+    "jasmine-spec-reporter": "^7.0.0",
     "jsonpath-plus": "^7.2.0",
     "rxjs": "latest",
     "tslib": "^2.5.2"
+  },
+  "devDependencies": {
+    "jasmine-core": "^5.0.0",
+    "jasmine-spec-reporter": "latest",
+    "karma": "latest",
+    "karma-chrome-launcher": "latest",
+    "karma-coverage-istanbul-reporter": "latest",
+    "karma-jasmine": "latest",
+    "karma-jasmine-html-reporter": "latest"
   }
 }
