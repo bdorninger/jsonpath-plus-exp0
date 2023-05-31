@@ -10,18 +10,18 @@ describe(`basic merge tests`, () => {
     /**
      * Merge a snippet into the model after a specific variable
      */
-    merged = merge(model, snip, {
+    /*merged = merge(model, snip, {
       pos: 'after',
       property: 'evsModel',
       value: 'nsu=http://engelglobal.com/IMM/AirValve3/;s=sv_rActiveTime',
       contributor: '_IMM_',
-    });
+    });*/
 
     /*
      * Merge multiple snippets into a model using different insertion points
      */
-    /* merged = merge(
-      merged,
+    merged = merge(
+      model,
       { evsModel: 'mySuperDuperModel000', viewId: 'input' },
       {
         property: 'insertionPoint',
@@ -57,12 +57,12 @@ describe(`basic merge tests`, () => {
         contributor: 'HUGO',
         sort: false,
       }
-    );*/
+    );
 
     /*
      * check positions
      */
-    const selected0 = await select(merged, {
+    /* const selected0 = await select(merged, {
       property: 'name',
       value: 'Air valve - blowing',
     });
@@ -73,8 +73,8 @@ describe(`basic merge tests`, () => {
       insertAt: 'myId2',
       position: 22,
     });
-    expect(selected0[0]).toEqual(expected0);
-    /*
+    expect(selected0[0]).toEqual(expected0);*/
+
     expect(merged.content[0]).toEqual(
       jasmine.objectContaining({
         evsModel: 'myTOPModel',
@@ -102,13 +102,13 @@ describe(`basic merge tests`, () => {
         viewId: 'input',
       })
     );
-*/
+
     console.log(merged);
 
     /*
      * How to remove snippets from a model: e.g. device disconnects in running visu
      */
-    /*   const removed = await remove(merged, {
+    const removed = await remove(merged, {
       property: 'contributor',
       value: 'SEPP',
     });
@@ -119,7 +119,7 @@ describe(`basic merge tests`, () => {
       property: 'contributor',
       value: 'SEPP',
     });
-    expect(selectedAfterRemove.length).toBe(0);*/
+    expect(selectedAfterRemove.length).toBe(0);
   });
 
   /**

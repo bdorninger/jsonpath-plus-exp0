@@ -29,6 +29,60 @@ export interface SelectOptions<T extends VT = string>
 /**
  * merges two models/snippets by considering the specified options
  */
+export function mergeP<M extends MT, O extends VT = string>(
+  modelSrc: M,
+  snippet: object,
+  options: MergeOptions<O>
+): Promise<M> {
+  return new Promise((resolve, reject) => {
+    const prop = options.property ?? 'evsModel';
+    const value =
+      typeof options.value === 'string' ? escape(options.value) : options.value;
+    /*
+  const path = `$..[?(@.${prop} === '${value}')]${
+    options.pos === 'content' || options.pos === 'header' ? '' : '^'
+  }`;
+  */
+
+    const path = `$..[?(@property === '${prop}' && @ === ${value})]`;
+
+    // const path = `$..[?(@property === 'insertionPoint')]`;
+
+    // console.log(`Merging.....path is ${path}`, options, modelSrc);
+    JSONPath({
+      json: modelSrc,
+      path: path,
+      wrap: true,
+      callback: (pl, pt, fpl) => {
+        console.log(`jsonpath callback payloads`, pl, pt, fpl);
+
+        // case 1: before or after a specific object having a specific prop in an ARRAY
+        // case 2: in the content or header of an OBJECT with a specific prop
+        // default merging strategy: add top level content to top content array and top level headers into top header array
+        // fpl.parent, fpl.value
+        if (
+          Array.isArray(fpl.parent) &&
+          (options.pos === 'before' || options.pos === 'after')
+        ) {
+          const destIndex = fpl.parent.findIndex(
+            (elem: any) => elem[prop] === options.value
+          );
+          insertSnip(
+            fpl.parent,
+            snippet,
+            destIndex,
+            options.pos,
+            options.contributor
+          );
+        }
+      },
+    });
+  });
+}
+
+/**
+ * merges two models/snippets by considering the specified options
+ */
 export function merge<M extends MT, O extends VT = string>(
   modelSrc: M,
   snippet: object,
@@ -52,8 +106,9 @@ export function merge<M extends MT, O extends VT = string>(
     json: modelSrc,
     path: path,
     wrap: true,
-    callback: (pl, pt, fpl) =>
-      console.log(`jsonpath callback payloads`, pl, pt, fpl),
+    callback: (pl, pt, fpl) => {
+      console.log(`jsonpath callback payloads!`, pl, pt, fpl);
+    },
   });
   // console.log(`Results`, results);
   if (results.length > 0) {
@@ -103,8 +158,7 @@ export function merge<M extends MT, O extends VT = string>(
           options.contributor
         );
         // index contains the name of the property the content array is sorted
-        // do we need to sort it when performing the merge? I think we can we leave the interpretation of the content arrays it to the rendering process
-        // To have sorted content after assembly merge or even runtime merge is not required
+        // Contents are rendered in sequence, sorting must be done in advance
         if (options.sort) {
           (destObject[targetArrayProperty] as any[]).sort(
             (a, b) => (a[sortProp] ?? 0) - (b[sortProp] ?? 0)
