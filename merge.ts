@@ -60,19 +60,73 @@ export function mergeP<M extends MT, O extends VT = string>(
         // case 2: in the content or header of an OBJECT with a specific prop
         // default merging strategy: add top level content to top content array and top level headers into top header array
         // fpl.parent, fpl.value
+        const destObject = fpl.parent;
+
+        let mergeDone = false;
         if (
-          Array.isArray(fpl.parent) &&
+          Array.isArray(destObject) &&
           (options.pos === 'before' || options.pos === 'after')
         ) {
-          const destIndex = fpl.parent.findIndex(
+          const destIndex = destObject.findIndex(
             (elem: any) => elem[prop] === options.value
           );
-          insertSnip(
-            fpl.parent,
+          mergeDone = insertSnip(
+            destObject,
             snippet,
             destIndex,
             options.pos,
             options.contributor
+          );
+        } else if (
+          typeof destObject === 'object' &&
+          (options.pos === 'content' || options.pos === 'header')
+        ) {
+          const targetArrayProperty = options.pos;
+          if (destObject[targetArrayProperty] == null) {
+            destObject[targetArrayProperty] = [];
+          } else if (!Array.isArray(destObject[targetArrayProperty])) {
+            reject(
+              new Error(
+                `cannot merge into "${targetArrayProperty}". That property is present and NOT an array!`
+              )
+            );
+          }
+
+          if (typeof options.index === 'number') {
+            mergeDone = insertSnip(
+              destObject[targetArrayProperty],
+              snippet,
+              options.index,
+              options.pos,
+              options.contributor
+            );
+          } else if (typeof options.index === 'string') {
+            const sortProp = options.index;
+            mergeDone = insertSnip(
+              destObject[targetArrayProperty],
+              snippet,
+              0,
+              options.pos,
+              options.contributor
+            );
+            // index contains the name of the property the content array is sorted
+            // Contents are rendered in sequence, sorting must be done in advance
+            if (options.sort) {
+              (destObject[targetArrayProperty] as any[]).sort(
+                (a, b) => (a[sortProp] ?? 0) - (b[sortProp] ?? 0)
+              );
+            }
+          }
+        }
+        if (mergeDone) {
+          resolve(modelSrc);
+        } else {
+          reject(
+            new Error(
+              `no merge performed with the provided options: ${JSON.stringify(
+                options
+              )}`
+            )
           );
         }
       },
@@ -272,7 +326,10 @@ function adjustIndexToArrayBounds(arr: any[], rInd: number): number {
   return ind;
 }
 
-// helper function
+/**
+ * inserts a snippet
+ * @arr
+ */
 function insertSnip(
   arr: any[],
   snip: any,
@@ -306,6 +363,7 @@ function insertSnip(
   } else {
     arr.splice(index, 0, snip);
   }
+  return true;
 }
 
 /**

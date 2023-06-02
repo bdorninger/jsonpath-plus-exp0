@@ -1,7 +1,46 @@
 import { viewdata, viewsnip, viewsnip3 } from '../data';
-import { merge, remove, select } from '../merge';
+import { merge, mergeP, remove, select } from '../merge';
 
 describe(`basic merge tests`, () => {
+  fit(`can merge snippets in to a model`, async () => {
+    const model = viewdata;
+    const snip = viewsnip;
+    let merged: any;
+
+    // The snippet is inserted into the model
+    // 1. into the "content" array
+    // 2. at index 1 (if the array is already long enough) of
+    // 3. the first found object with an 'insertionPoint':'myId' property
+    // 4. The inserted snippet gets added a property "contributor" with a value 'KARL'
+    // 5. The content array where the object was inserted is NOT sorted
+    merged = await mergeP(
+      model,
+      { evsModel: 'mySuperDuperModel000', viewId: 'input' },
+      {
+        property: 'insertionPoint',
+        value: 'myId',
+        pos: 'content',
+        index: 1,
+        contributor: 'KARL',
+        sort: false,
+      }
+    );
+
+    console.log(`Merged: `, merged);
+
+    const selected = await select(merged, {
+      property: 'contributor',
+      value: 'KARL',
+    });
+    expect(selected.length).toBe(1);
+    expect(selected[0]).toEqual(
+      jasmine.objectContaining({
+        evsModel: 'mySuperDuperModel000',
+        viewId: 'input',
+      })
+    );
+  });
+
   it(`can merge snippets in to a model`, async () => {
     const model = viewdata;
     const snip = viewsnip;
